@@ -1,0 +1,62 @@
+@model IEnumerable<LearnMvc.Models.TaskItem>
+
+@{
+    ViewData["Title"] = "Task List";
+    var filter = ViewBag.Filter ?? "all";
+}
+
+<div class="container mt-4">
+    <h1>Task List</h1>
+    
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <a asp-action="Create" class="btn btn-primary">Create New Task</a>
+        </div>
+        <div class="col-md-6 text-end">
+            <div class="btn-group" role="group">
+                <a asp-action="Index" asp-route-filter="all" class="btn @(filter == "all" ? "btn-primary" : "btn-outline-primary")">All</a>
+                <a asp-action="Index" asp-route-filter="pending" class="btn @(filter == "pending" ? "btn-primary" : "btn-outline-primary")">Pending</a>
+                <a asp-action="Index" asp-route-filter="completed" class="btn @(filter == "completed" ? "btn-primary" : "btn-outline-primary")">Completed</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <div class="list-group">
+                    @foreach (var item in Model)
+                    {
+                        <div class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <div class="form-check">
+                                    <form asp-action="ToggleComplete" method="post" class="d-inline">
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <button type="submit" class="btn btn-link p-0 me-2">
+                                            <i class="bi @(item.IsComplete ? "bi-check-square" : "bi-square") fs-4"></i>
+                                        </button>
+                                    </form>
+                                    <span class="ms-2 @(item.IsComplete ? "text-decoration-line-through text-muted" : "")">
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </span>
+                                </div>
+                                <div>
+                                    <small class="text-muted me-2">@item.CreatedDate.ToString("g")</small>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-4">
+                    <p class="text-muted">No tasks found. <a asp-action="Create">Create a new task</a> to get started!</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
