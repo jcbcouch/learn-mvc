@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LearnMvc.Data;
 using LearnMvc.Models;
@@ -22,19 +23,7 @@ namespace LearnMvc.Controllers
         // GET: Book
         public async Task<IActionResult> Index()
         {
-            var books = await _context.Books
-                .Include(b => b.Author)
-                .Select(b => new BookViewModel
-                {
-                    Id = b.Id,
-                    Title = b.Title,
-                    ISBN = b.ISBN,
-                    PublishedDate = b.PublishedDate,
-                    PageCount = b.PageCount,
-                    AuthorName = b.Author != null ? $"{b.Author.FirstName} {b.Author.LastName}" : "Unknown"
-                })
-                .ToListAsync();
-
+            List<Book> books = await _context.Books.Include(b => b.Author).ToListAsync();
             return View(books);
         }
 
@@ -50,26 +39,63 @@ namespace LearnMvc.Controllers
                 .Include(b => b.Author)
                 .Include(b => b.BookCategories)
                     .ThenInclude(bc => bc.Category)
-                .FirstOrDefaultAsync(b => b.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (book == null)
             {
                 return NotFound();
             }
 
-            var viewModel = new BookViewModel
+            return View(book);
+        }
+
+        // GET: Book/Create
+        public async Task<IActionResult> Create()
+        {
+            var authors = await _context.Authors
+                .OrderBy(a => a.LastName)
+                .ThenBy(a => a.FirstName)
+                .Select(a => new SelectListItem 
+                { 
+                    Value = a.Id.ToString(),
+                    Text = $"{a.LastName}, {a.FirstName}"
+                })
+                .ToListAsync();
+
+            var viewModel = new CreateBookViewModel
             {
-                Id = book.Id,
-                Title = book.Title,
-                ISBN = book.ISBN,
-                PublishedDate = book.PublishedDate,
-                PageCount = book.PageCount,
-                AuthorName = book.Author != null ? $"{book.Author.FirstName} {book.Author.LastName}" : "Unknown",
-                AuthorBio = book.Author?.Bio,
-                Categories = book.BookCategories?.Select(bc => bc.Category?.Name).Where(name => name != null).ToList() ?? new List<string>()
+                Book = new Book
+                {
+                    PublishedDate = DateTime.Today
+                },
+                Authors = authors
             };
 
             return View(viewModel);
+        }
+
+        // POST: Book/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreateBookViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                viewModel.Authors = await _context.Authors
+                    .OrderBy(a => a.LastName)
+                    .ThenBy(a => a.FirstName)
+                    .Select(a => new SelectListItem 
+                    { 
+                        Value = a.Id.ToString(),
+                        Text = $"{a.LastName}, {a.FirstName}"
+                    })
+                    .ToListAsync();
+                return View(viewModel);
+            }
+
+                _context.Add(viewModel.Book);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
         }
     }
 }

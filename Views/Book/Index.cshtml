@@ -1,4 +1,4 @@
-@model IEnumerable<LearnMvc.Models.ViewModels.BookViewModel>
+@model IEnumerable<LearnMvc.Models.Book>
 
 @{
     ViewData["Title"] = "Books";
@@ -12,7 +12,7 @@
         <thead>
             <tr>
                 <th>@Html.DisplayNameFor(model => model.Title)</th>
-                <th>@Html.DisplayNameFor(model => model.AuthorName)</th>
+                <th>Author</th>
                 <th>@Html.DisplayNameFor(model => model.ISBN)</th>
                 <th>@Html.DisplayNameFor(model => model.PublishedDate)</th>
                 <th>@Html.DisplayNameFor(model => model.PageCount)</th>
@@ -28,7 +28,7 @@
                             @Html.DisplayFor(modelItem => item.Title)
                         </a>
                     </td>
-                    <td>@Html.DisplayFor(modelItem => item.AuthorName)</td>
+                    <td>@(item.Author != null ? $"{item.Author.FirstName} {item.Author.LastName}" : "Unknown")</td>
                     <td>@Html.DisplayFor(modelItem => item.ISBN)</td>
                     <td>@item.PublishedDate.ToString("yyyy-MM-dd")</td>
                     <td>@Html.DisplayFor(modelItem => item.PageCount)</td>

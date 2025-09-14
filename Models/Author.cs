@@ -18,7 +18,8 @@ namespace LearnMvc.Models
         public string Bio { get; set; }
         
         // Navigation property for one-to-many with Book
-        public virtual ICollection<Book> Books { get; set; } = new List<Book>();
+        //public virtual ICollection<Book> Books { get; set; } = new List<Book>();
+        public List<Book> Books { get; set; }
         
         // Computed property for full name
         public string FullName => $"{FirstName} {LastName}";

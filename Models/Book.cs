@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace LearnMvc.Models
 {
@@ -20,9 +22,9 @@ namespace LearnMvc.Models
         
         // Foreign key for Author (one-to-many)
         public int AuthorId { get; set; }
-        
-        // Navigation property to Author
-        public virtual Author Author { get; set; }
+        [ForeignKey("AuthorId")]
+        [ValidateNever]
+        public Author Author { get; set; }
         
         // Navigation property for many-to-many with Category
         public virtual ICollection<BookCategory> BookCategories { get; set; } = new List<BookCategory>();
