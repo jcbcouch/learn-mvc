@@ -1,0 +1,66 @@
+@model LearnMvc.Models.ViewModels.BookCategoryViewModel
+
+@{
+    ViewData["Title"] = "Manage Categories for " + Model.Book.Title;
+}
+
+<div class="card">
+    <div class="card-header">
+        <h2>Manage Categories for @Model.Book.Title</h2>
+        <a asp-action="Details" asp-route-id="@Model.Book.Id" class="btn btn-secondary">Back to Book</a>
+    </div>
+    
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Current Categories</h4>
+                @if (Model.BookCategories.Any())
+                {
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Category Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var category in Model.BookCategories)
+                            {
+                                <tr>
+                                    <td>@category.Category?.Name</td>
+                                    <td>
+                                        <form method="post" asp-action="RemoveCategory" asp-route-bookId="@Model.Book.Id" asp-route-categoryId="@category.CategoryId" 
+                                              onsubmit="return confirm('Are you sure you want to remove this category?');" class="d-inline">
+                                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p>No categories assigned to this book.</p>
+                }
+            </div>
+            
+            <div class="col-md-6">
+                <h4>Add New Category</h4>
+                <form method="post" asp-action="AddCategory" asp-route-bookId="@Model.Book.Id">
+                    <div class="form-group">
+                        <label>Select Category</label>
+                        <select name="categoryId" class="form-control" asp-items="Model.Categories">
+                            <option value="">-- Select Category --</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-2">Add Category</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

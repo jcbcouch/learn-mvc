@@ -77,7 +77,7 @@ namespace LearnMvc.Controllers
         // POST: Book/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateBookViewModel viewModel)
+        public async Task<IActionResult> Create(CreateBookViewModel viewModel) 
         {
             if (!ModelState.IsValid)
             {
@@ -96,6 +96,126 @@ namespace LearnMvc.Controllers
                 _context.Add(viewModel.Book);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
+        }
+
+        // POST: Book/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var book = await _context.Books.FindAsync(id);
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            _context.Books.Remove(book);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult ManageCategories(int id)
+        {
+            var book = _context.Books
+                .Include(b => b.BookCategories)
+                    .ThenInclude(bc => bc.Category)
+                .FirstOrDefault(b => b.Id == id);
+
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            var assignedCategoryIds = book.BookCategories?.Select(bc => bc.CategoryId).ToList() ?? new List<int>();
+            
+            var availableCategories = _context.Categories
+                .Where(c => !assignedCategoryIds.Contains(c.Id))
+                .ToList();
+
+            var viewModel = new BookCategoryViewModel
+            {
+                Book = book,
+                BookCategories = book.BookCategories ?? new List<BookCategory>(),
+                Categories = availableCategories.Select(c => new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.Id.ToString()
+                })
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddCategory(int bookId, int categoryId)
+        {
+            var book = await _context.Books
+                .Include(b => b.BookCategories)
+                .FirstOrDefaultAsync(b => b.Id == bookId);
+
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            var category = await _context.Categories.FindAsync(categoryId);
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            // Check if the category is already assigned to the book
+            var existingAssignment = book.BookCategories?.FirstOrDefault(bc => bc.CategoryId == categoryId);
+            if (existingAssignment != null)
+            {
+                // Category already assigned, just return to the same page
+                return RedirectToAction(nameof(ManageCategories), new { id = bookId });
+            }
+
+            // Add the new category
+            var bookCategory = new BookCategory
+            {
+                BookId = bookId,
+                CategoryId = categoryId,
+                AddedBy = "System",
+                AddedDate = DateTime.UtcNow
+            };
+
+            if (book.BookCategories == null)
+            {
+                book.BookCategories = new List<BookCategory>();
+            }
+
+            book.BookCategories.Add(bookCategory);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(ManageCategories), new { id = bookId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveCategory(int bookId, int categoryId)
+        {
+            var book = await _context.Books
+                .Include(b => b.BookCategories)
+                .FirstOrDefaultAsync(b => b.Id == bookId);
+
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            var bookCategory = book.BookCategories?.FirstOrDefault(bc => bc.CategoryId == categoryId);
+            if (bookCategory == null)
+            {
+                return NotFound();
+            }
+
+            book.BookCategories.Remove(bookCategory);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(ManageCategories), new { id = bookId });
         }
     }
 }

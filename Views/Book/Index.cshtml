@@ -6,6 +6,10 @@
 
 <h1>Books</h1>
 
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Book</a>
+</p>
+
 @if (Model.Any())
 {
     <table class="table table-striped">
@@ -33,7 +37,10 @@
                     <td>@item.PublishedDate.ToString("yyyy-MM-dd")</td>
                     <td>@Html.DisplayFor(modelItem => item.PageCount)</td>
                     <td>
-                        <a asp-action="BookDetails" asp-route-id="@item.Id" class="btn btn-info btn-sm">Details</a>
+                        <div class="btn-group" role="group">
+                            <a asp-action="BookDetails" asp-route-id="@item.Id" class="btn btn-info btn-sm">Details</a>
+                            <a asp-action="ManageCategories" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Manage Categories</a>
+                        </div>
                     </td>
                 </tr>
             }
@@ -43,6 +50,6 @@
 else
 {
     <div class="alert alert-info">
-        No books found in the database.
+        No books found in the database. <a asp-action="Create" class="alert-link">Create a new book</a> to get started.
     </div>
 }

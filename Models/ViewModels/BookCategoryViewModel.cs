@@ -5,13 +5,17 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using LearnMvc.Models;
 
+
 namespace LearnMvc.Models.ViewModels
 {
-    public class CreateBookViewModel
+    public class BookCategoryViewModel
     {
        public Book Book { get; set; }
-        
-        [ValidateNever]
-        public IEnumerable<SelectListItem> Authors { get; set; }
+       public BookCategory BookCategory { get; set; }
+
+       [ValidateNever]
+       public IEnumerable<SelectListItem> Categories { get; set; }
+       [ValidateNever]
+       public IEnumerable<BookCategory> BookCategories { get; set; }
     }
 }
