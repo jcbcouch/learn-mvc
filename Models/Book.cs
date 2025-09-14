@@ -20,6 +20,9 @@ namespace LearnMvc.Models
         public DateTime PublishedDate { get; set; }
         public int PageCount { get; set; }
         
+        // Store the path to the uploaded image
+        public string? ImagePath { get; set; }
+        
         // Foreign key for Author (one-to-many)
         public int AuthorId { get; set; }
         [ForeignKey("AuthorId")]

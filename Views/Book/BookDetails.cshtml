@@ -18,42 +18,92 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-md-8">
-                    <dl class="row">
-                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.ISBN)</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.ISBN)</dd>
+                @if (!string.IsNullOrEmpty(Model.ImagePath))
+                {
+                    <div class="col-md-4 mb-3">
+                        <div class="book-cover-container">
+                            <img src="~/@Model.ImagePath" alt="@Model.Title cover" class="img-fluid rounded shadow" />
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <dl class="row">
+                            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.ISBN)</dt>
+                            <dd class="col-sm-8">@Html.DisplayFor(model => model.ISBN)</dd>
 
-                        <dt class="col-sm-4">Author</dt>
-                        <dd class="col-sm-8">
-                            @(Model.Author != null ? $"{Model.Author.FirstName} {Model.Author.LastName}" : "Unknown")
-                        </dd>
-
-                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.PublishedDate)</dt>
-                        <dd class="col-sm-8">@Model.PublishedDate.ToString("MMMM d, yyyy")</dd>
-
-                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.PageCount)</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.PageCount) pages</dd>
-
-                        @if (Model.BookCategories != null && Model.BookCategories.Any())
-                        {
-                            <dt class="col-sm-4">Categories</dt>
+                            <dt class="col-sm-4">Author</dt>
                             <dd class="col-sm-8">
-                                @string.Join(", ", Model.BookCategories.Select(bc => bc.Category?.Name).Where(name => name != null))
+                                @(Model.Author != null ? $"{Model.Author.FirstName} {Model.Author.LastName}" : "Unknown")
                             </dd>
-                        }
-                    </dl>
-                </div>
+
+                            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.PublishedDate)</dt>
+                            <dd class="col-sm-8">@Model.PublishedDate.ToString("MMMM d, yyyy")</dd>
+
+                            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.PageCount)</dt>
+                            <dd class="col-sm-8">@Html.DisplayFor(model => model.PageCount) pages</dd>
+
+                            @if (Model.BookCategories != null && Model.BookCategories.Any())
+                            {
+                                <dt class="col-sm-4">Categories</dt>
+                                <dd class="col-sm-8">
+                                    @string.Join(", ", Model.BookCategories.Select(bc => bc.Category?.Name).Where(name => name != null))
+                                </dd>
+                            }
+                        </dl>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-12">
+                        <dl class="row">
+                            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.ISBN)</dt>
+                            <dd class="col-sm-8">@Html.DisplayFor(model => model.ISBN)</dd>
+
+                            <dt class="col-sm-4">Author</dt>
+                            <dd class="col-sm-8">
+                                @(Model.Author != null ? $"{Model.Author.FirstName} {Model.Author.LastName}" : "Unknown")
+                            </dd>
+
+                            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.PublishedDate)</dt>
+                            <dd class="col-sm-8">@Model.PublishedDate.ToString("MMMM d, yyyy")</dd>
+
+                            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.PageCount)</dt>
+                            <dd class="col-sm-8">@Html.DisplayFor(model => model.PageCount) pages</dd>
+
+                            @if (Model.BookCategories != null && Model.BookCategories.Any())
+                            {
+                                <dt class="col-sm-4">Categories</dt>
+                                <dd class="col-sm-8">
+                                    @string.Join(", ", Model.BookCategories.Select(bc => bc.Category?.Name).Where(name => name != null))
+                                </dd>
+                            }
+                        </dl>
+                    </div>
+                }
             </div>
 
             @if (Model.Author != null && !string.IsNullOrEmpty(Model.Author.Bio))
             {
                 <div class="mt-4">
-                    <h5>About the Author</h5>
-                    <p class="text-muted">@Model.Author.Bio</p>
+                    <h4>About the Author</h4>
+                    <p>@Model.Author.Bio</p>
                 </div>
             }
         </div>
         <div class="card-footer">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
         </div>
     </div>
 </div>
+
+<style>
+    .book-cover-container {
+        max-width: 300px;
+        margin: 0 auto;
+    }
+    
+    .book-cover-container img {
+        max-height: 400px;
+        width: 100%;
+        object-fit: contain;
+    }
+</style>

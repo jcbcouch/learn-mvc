@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +16,12 @@ namespace LearnMvc.Controllers
     public class BookController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public BookController(ApplicationDbContext context)
+        public BookController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: Book
@@ -77,25 +81,46 @@ namespace LearnMvc.Controllers
         // POST: Book/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateBookViewModel viewModel) 
+        public async Task<IActionResult> Create(Book book, IFormFile ImageFile)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                viewModel.Authors = await _context.Authors
-                    .OrderBy(a => a.LastName)
-                    .ThenBy(a => a.FirstName)
-                    .Select(a => new SelectListItem 
-                    { 
-                        Value = a.Id.ToString(),
-                        Text = $"{a.LastName}, {a.FirstName}"
-                    })
-                    .ToListAsync();
-                return View(viewModel);
-            }
+                if (ImageFile != null && ImageFile.Length > 0)
+                {
+                    // Create the uploads directory if it doesn't exist
+                    string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "books");
+                    if (!Directory.Exists(uploadsFolder))
+                    {
+                        Directory.CreateDirectory(uploadsFolder);
+                    }
 
-                _context.Add(viewModel.Book);
+                    // Generate a unique filename
+                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(ImageFile.FileName);
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    // Save the file
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await ImageFile.CopyToAsync(fileStream);
+                    }
+
+                    // Save the relative path to the database
+                    book.ImagePath = Path.Combine("images", "books", uniqueFileName).Replace("\\", "/");
+                }
+
+                _context.Add(book);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
+            }
+            
+            // If we got this far, something failed; repopulate the view model and return
+            var viewModel = new CreateBookViewModel
+            {
+                Book = book,
+                Authors = new SelectList(await _context.Authors.ToListAsync(), "Id", "Name", book.AuthorId)
+            };
+            
+            return View(viewModel);
         }
 
         // POST: Book/Delete/5
@@ -107,6 +132,16 @@ namespace LearnMvc.Controllers
             if (book == null)
             {
                 return NotFound();
+            }
+
+            // Delete the image file if it exists
+            if (!string.IsNullOrEmpty(book.ImagePath))
+            {
+                string filePath = Path.Combine(_webHostEnvironment.WebRootPath, book.ImagePath.TrimStart('~', '/'));
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
             }
 
             _context.Books.Remove(book);
