@@ -4,6 +4,7 @@ using LearnMvc.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace learn_mvc.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250914002954_AddLibraryModels")]
+    partial class AddLibraryModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -112,43 +115,6 @@ namespace learn_mvc.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Authors");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Bio = "British author best known for the Harry Potter series.",
-                            FirstName = "J.K.",
-                            LastName = "Rowling"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Bio = "English novelist, essayist, journalist, and critic.",
-                            FirstName = "George",
-                            LastName = "Orwell"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Bio = "American novelist widely known for To Kill a Mockingbird.",
-                            FirstName = "Harper",
-                            LastName = "Lee"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Bio = "English writer, poet, philologist, and academic.",
-                            FirstName = "J.R.R.",
-                            LastName = "Tolkien"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Bio = "English writer known for her detective novels.",
-                            FirstName = "Agatha",
-                            LastName = "Christie"
-                        });
                 });
 
             modelBuilder.Entity("LearnMvc.Models.Book", b =>
@@ -183,71 +149,6 @@ namespace learn_mvc.Migrations
                     b.HasIndex("AuthorId");
 
                     b.ToTable("Books");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AuthorId = 1,
-                            ISBN = "9780747532743",
-                            PageCount = 223,
-                            PublishedDate = new DateTime(1997, 6, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Harry Potter and the Philosopher's Stone"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AuthorId = 2,
-                            ISBN = "9780451524935",
-                            PageCount = 328,
-                            PublishedDate = new DateTime(1949, 6, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "1984"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            AuthorId = 3,
-                            ISBN = "9780061120084",
-                            PageCount = 281,
-                            PublishedDate = new DateTime(1960, 7, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "To Kill a Mockingbird"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            AuthorId = 4,
-                            ISBN = "9780547928227",
-                            PageCount = 310,
-                            PublishedDate = new DateTime(1937, 9, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "The Hobbit"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            AuthorId = 5,
-                            ISBN = "9780007119318",
-                            PageCount = 256,
-                            PublishedDate = new DateTime(1934, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Murder on the Orient Express"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            AuthorId = 2,
-                            ISBN = "9780451526342",
-                            PageCount = 112,
-                            PublishedDate = new DateTime(1945, 8, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Animal Farm"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            AuthorId = 4,
-                            ISBN = "9780544003415",
-                            PageCount = 1178,
-                            PublishedDate = new DateTime(1954, 7, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "The Lord of the Rings"
-                        });
                 });
 
             modelBuilder.Entity("LearnMvc.Models.BookCategory", b =>
@@ -270,99 +171,6 @@ namespace learn_mvc.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("BookCategories");
-
-                    b.HasData(
-                        new
-                        {
-                            BookId = 1,
-                            CategoryId = 1,
-                            AddedBy = "System",
-                            AddedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            BookId = 1,
-                            CategoryId = 2,
-                            AddedBy = "System",
-                            AddedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            BookId = 2,
-                            CategoryId = 1,
-                            AddedBy = "System",
-                            AddedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            BookId = 2,
-                            CategoryId = 6,
-                            AddedBy = "System",
-                            AddedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            BookId = 3,
-                            CategoryId = 1,
-                            AddedBy = "System",
-                            AddedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            BookId = 3,
-                            CategoryId = 5,
-                            AddedBy = "System",
-                            AddedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            BookId = 4,
-                            CategoryId = 2,
-                            AddedBy = "System",
-                            AddedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            BookId = 4,
-                            CategoryId = 5,
-                            AddedBy = "System",
-                            AddedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            BookId = 5,
-                            CategoryId = 4,
-                            AddedBy = "System",
-                            AddedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            BookId = 6,
-                            CategoryId = 1,
-                            AddedBy = "System",
-                            AddedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            BookId = 6,
-                            CategoryId = 6,
-                            AddedBy = "System",
-                            AddedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            BookId = 7,
-                            CategoryId = 2,
-                            AddedBy = "System",
-                            AddedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            BookId = 7,
-                            CategoryId = 5,
-                            AddedBy = "System",
-                            AddedDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        });
                 });
 
             modelBuilder.Entity("LearnMvc.Models.Category", b =>
@@ -385,44 +193,6 @@ namespace learn_mvc.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Imaginary stories and characters.",
-                            Name = "Fiction"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Fiction with magical or supernatural elements.",
-                            Name = "Fantasy"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "Fiction dealing with futuristic concepts.",
-                            Name = "Science Fiction"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Description = "Fiction dealing with the solution of a crime.",
-                            Name = "Mystery"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Description = "Works of literature that are considered to be of the highest quality.",
-                            Name = "Classic"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Description = "Fiction set in a society that is undesirable or frightening.",
-                            Name = "Dystopian"
-                        });
                 });
 
             modelBuilder.Entity("LearnMvc.Models.LibraryCard", b =>
@@ -449,40 +219,6 @@ namespace learn_mvc.Migrations
                         .IsUnique();
 
                     b.ToTable("LibraryCards");
-
-                    b.HasData(
-                        new
-                        {
-                            CardNumber = "LC1001",
-                            ExpiryDate = new DateTime(2024, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = true,
-                            IssueDate = new DateTime(2023, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            StudentId = 1
-                        },
-                        new
-                        {
-                            CardNumber = "LC1002",
-                            ExpiryDate = new DateTime(2024, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = true,
-                            IssueDate = new DateTime(2023, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            StudentId = 2
-                        },
-                        new
-                        {
-                            CardNumber = "LC1003",
-                            ExpiryDate = new DateTime(2024, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = true,
-                            IssueDate = new DateTime(2023, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            StudentId = 3
-                        },
-                        new
-                        {
-                            CardNumber = "LC1004",
-                            ExpiryDate = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsActive = false,
-                            IssueDate = new DateTime(2023, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            StudentId = 4
-                        });
                 });
 
             modelBuilder.Entity("LearnMvc.Models.Student", b =>
@@ -508,43 +244,6 @@ namespace learn_mvc.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Students");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Email = "john.smith@example.com",
-                            EnrollmentDate = new DateTime(2024, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "John Smith"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Email = "emily.j@example.com",
-                            EnrollmentDate = new DateTime(2024, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Emily Johnson"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Email = "michael.b@example.com",
-                            EnrollmentDate = new DateTime(2024, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Michael Brown"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Email = "sarah.d@example.com",
-                            EnrollmentDate = new DateTime(2023, 12, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Sarah Davis"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Email = "david.w@example.com",
-                            EnrollmentDate = new DateTime(2024, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "David Wilson"
-                        });
                 });
 
             modelBuilder.Entity("LearnMvc.Models.TaskItem", b =>

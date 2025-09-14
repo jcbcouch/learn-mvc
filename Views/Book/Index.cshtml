@@ -1,0 +1,48 @@
+@model IEnumerable<LearnMvc.Models.ViewModels.BookViewModel>
+
+@{
+    ViewData["Title"] = "Books";
+}
+
+<h1>Books</h1>
+
+@if (Model.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Title)</th>
+                <th>@Html.DisplayNameFor(model => model.AuthorName)</th>
+                <th>@Html.DisplayNameFor(model => model.ISBN)</th>
+                <th>@Html.DisplayNameFor(model => model.PublishedDate)</th>
+                <th>@Html.DisplayNameFor(model => model.PageCount)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <a asp-action="BookDetails" asp-route-id="@item.Id">
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </a>
+                    </td>
+                    <td>@Html.DisplayFor(modelItem => item.AuthorName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ISBN)</td>
+                    <td>@item.PublishedDate.ToString("yyyy-MM-dd")</td>
+                    <td>@Html.DisplayFor(modelItem => item.PageCount)</td>
+                    <td>
+                        <a asp-action="BookDetails" asp-route-id="@item.Id" class="btn btn-info btn-sm">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info">
+        No books found in the database.
+    </div>
+}

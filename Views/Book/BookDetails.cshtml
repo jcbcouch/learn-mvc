@@ -1,0 +1,49 @@
+@model LearnMvc.Models.ViewModels.BookViewModel
+
+@{
+    ViewData["Title"] = "Book Details";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h2>@Model.Title</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.ISBN)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.ISBN)</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.AuthorName)</dt>
+                        <dd class="col-sm-8">@Model.AuthorName</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.PublishedDate)</dt>
+                        <dd class="col-sm-8">@Model.PublishedDate.ToString("MMMM d, yyyy")</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.PageCount)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.PageCount) pages</dd>
+
+                        @if (Model.Categories != null && Model.Categories.Any())
+                        {
+                            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Categories)</dt>
+                            <dd class="col-sm-8">@string.Join(", ", Model.Categories)</dd>
+                        }
+                    </dl>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.AuthorBio))
+            {
+                <div class="mt-4">
+                    <h5>About the Author</h5>
+                    <p class="text-muted">@Model.AuthorBio</p>
+                </div>
+            }
+        </div>
+        <div class="card-footer">
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+</div>
